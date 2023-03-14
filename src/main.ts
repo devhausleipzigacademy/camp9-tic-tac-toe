@@ -25,12 +25,6 @@ function coordToId(coord: Coordinates): string {
 
 // "2" vs 2
 
-// the argument will look like "2-3" and we will return [2,3]
-function idToCoord(id: `${number}-${number}`): Coordinates {
-	const [row, col] = id.split("-");
-	return [parseInt(row), parseInt(col)];
-}
-
 // game settings
 const gridSize = 3;
 const gridCellStyling = ["h-[200px]", "w-[200px]", "border", "border-black"];
@@ -48,7 +42,7 @@ const resetButton = document.getElementById("reset-button");
 
 // make players
 const players: Array<Player> = [
-	{ name: "Player 1", symbol: "x", score: 0 },
+	{ name: "Player1", symbol: "x", score: 0 },
 	{ name: "Player 2", symbol: "o", score: 0 },
 ];
 
@@ -76,6 +70,36 @@ const winConditions = [
 	["0-0", "1-1", "2-2"],
 	["2-0", "1-1", "0-2"],
 ];
+
+function didIWin() {
+	for (const winCondition of winConditions) {
+		const [cell1, cell2, cell3] = winCondition.map((id) => gameState[id]);
+
+		const winner =
+			cell1.markedBy != null &&
+			cell2.markedBy != null &&
+			cell3.markedBy != null &&
+			cell1.markedBy == cell2.markedBy &&
+			cell2.markedBy == cell3.markedBy &&
+			cell3.markedBy == cell1.markedBy;
+
+		if (winner) {
+			return true;
+		}
+	}
+}
+
+// create a simple function that displays : a congrtaulatory winning message
+
+// you need to do something where currently we are displaying the current players turn
+
+// you only win the game in your own turn, if it is player 1 turn, then only they can win.
+
+// you need to use the name of the player in the message, in this case it is either player 1 or player 2
+
+function displayWinner() {
+	// the dom element comes here = something happens to the dom element
+}
 
 function makeMyGrid() {
 	for (let row = 0; row < gridSize; row++) {
@@ -126,7 +150,7 @@ function makeMyGrid() {
 
 						const nextPlayer = players[turn];
 
-						currentPlayerElement.textContent = `The current player is: ${nextPlayer}`;
+						currentPlayerElement.textContent = `The current player is: ${nextPlayer.name}`;
 					}
 				}
 			});
