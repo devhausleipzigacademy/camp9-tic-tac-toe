@@ -98,7 +98,7 @@ function didIWin() {
 // you need to use the name of the player in the message, in this case it is either player 1 or player 2
 
 function displayWinner() {
-	// the dom element comes here = something happens to the dom element
+	currentPlayerElement.textContent = `You are the winner, dear: ${players[turn].name}`;
 }
 
 function makeMyGrid() {
@@ -145,6 +145,14 @@ function makeMyGrid() {
 
 						//here we have to bring our function for checking win condition
 
+						const gameWinner = didIWin();
+
+						if (gameWinner) {
+							displayWinner();
+							gameEndState = true;
+							return;
+						}
+
 						// go to the next turn, and one can always wrap around
 						turn = (turn + 1) % players.length;
 
@@ -157,5 +165,20 @@ function makeMyGrid() {
 		}
 	}
 }
+
+function resetGrid() {
+	while (gameGrid.lastChild) {
+		gameGrid.removeChild(gameGrid.lastChild);
+	}
+
+	gameEndState = false;
+	turn = 0;
+	gameState = {};
+	currentPlayerElement.textContent = `The current player is: ${players[0].name}`;
+
+	makeMyGrid();
+}
+
+resetButton?.addEventListener("click", resetGrid);
 
 makeMyGrid();
